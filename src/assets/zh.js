@@ -66,7 +66,7 @@ module.exports={
 			bdyx:"绑定邮箱",
 			sfrz:"身份认证",
 			dlmm:"登录密码",
-			bdqkdd:"绑定区块地址",
+			bdqkdd:"区块身份ID",
 			bd:"绑定",
 			xg:"修改",
 			rz:"认证",

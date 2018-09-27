@@ -1,103 +1,103 @@
 <template>
-	<!--购买 下单-->
-	<div class="buySuccess">
-		<div class="line">
-			<div class="blue">已拍下</div>
-			<img src="../../static/line.png" />
-			<div class="red">{{left_state}}</div>
-		</div>
-		<div class="main">
-			<div class="title">
-				<div class="name">您向
-					<span>{{datas.customer}}</span>购买{{datas.currencyType}}下单成功！</div>
-				<div class="time">{{datas.createTime}}</div>
-			</div>
-			<div class="list">
-				<div class="list_title">
-					<div class="t1 tt1">购买币种</div>
-					<div class="t1">购买数量</div>
-					<div class="t2">单价</div>
-					<div class="t1">付款方式</div>
-					<div class="t2">付款金额</div>
-					<div class="t2">订单状态</div>
-				</div>
-				<div class="list_content">
-					<!--购买币种-->
-					<div class="t1">{{datas.currencyType}}</div>
-					<!--数量-->
-					<div class="t1">{{datas.bidt}}</div>
-					<!--单价-->
-					<div class="t2">{{datas.unitPrice}} {{payType[datas.type]}}</div>
-					<!--方式-->
-					<div class="t1">{{payType[datas.type]}}</div>
-					<!--总价-->
-					<div class="t2">{{datas.price}} {{payType[datas.type]}}</div>
-					<!--状态-->
-					<div class="t2">{{orderstatus[datas.orderStatus]}}</div>
-				</div>
-				<!--代付款-->
-				<div class="list_num" v-if="status==='1'">
-					待付款：{{datas.price}} {{payType[datas.type]}}
-				</div>
-				<div class="list_num" v-if="status==='2'||status==='3'||status==='4'">
-					已付款：{{datas.price}} {{payType[datas.type]}}
-				</div>
-				<div class="list_num" v-if="status==='0'||status==='5'">
-					<s>待付款：{{datas.price}} {{payType[datas.type]}}</s>
-				</div>
-			</div>
-			<div class="message">
-				<div class="message_title">对方收款账号或收币地址请向对方确认</div>
-				<!--蛋生支付-->
-				<div class="eggzf" v-if="datas.projectType!=0&&datas.isEgg!=0">
-					<div class="zfb" v-if="datas.eggOrderDetails.payType!=2">
-						<img src="../../static/zfbimg.png" class="main_img" />
-						<div class="info">
-							<div class="egg_name">{{datas.eggOrderDetails.number}}</div>
-						</div>
-						<div class="egg_code">
-							<img :src="datas.eggOrderDetails.picUrl" class="min_code" />
-							<img :src="datas.eggOrderDetails.picUrl" class="max_code" />
-						</div>
-					</div>
-					<div class="zfb" v-if="datas.eggOrderDetails.payType!=1">
-						<img src="../../static/wximg.png" class="main_img" />
-						<div class="info">
-							<div class="egg_name">{{datas.eggOrderDetails.number}}</div>
-						</div>
-						<div class="egg_code">
-							<img :src="datas.eggOrderDetails.picUrl" class="min_code" />
-							<img :src="datas.eggOrderDetails.picUrl" class="max_code" />
-						</div>
-					</div>
-				</div>
-				<!--货币支付-->
-				<div class="hbzf" v-if="datas.projectType!=1">
-					<div class="cnyzf" v-if="payType[datas.type]==='CNY'">
-						<img src="../../static/cnyimg.png" class="main_img" />
-						<div class="info">
-							<div class="egg_name">{{datas.userAddressVo.bankName}} {{datas.userAddressVo.cnyuserName}}</div>
-							<div class="egg_name">{{datas.userAddressVo.cnyaddress}}</div>
-						</div>
-					</div>
-					<div class="bbzf" v-if="payType[datas.type]==='BTC'">
-						BTC收币地址：{{datas.userAddressVo.btcaddress}}
-					</div>
-					<div class="bbzf" v-if="payType[datas.type]==='ETH'">
-						ETH收币地址：{{datas.userAddressVo.ethaddress}}
-					</div>
-					<div class="bbzf" v-if="payType[datas.type]==='BIDT'">
-						BIDT收币地址：{{datas.userAddressVo.bidtaddress}}
-					</div>
-					<div class="bbzf" v-if="payType[datas.type]==='USDT'">
-						USDT收币地址：{{datas.userAddressVo.usdtaddress}}
-					</div>
-				</div>
-				<div class="message_title">联系对方</div>
-				<div class="message_content">
-					<div class="messcon_title">您可以在这开始与卖家交流了！</div>
-					<div class="message_main">
-						<!--<div class="l_message">
+  <!--购买 下单-->
+  <div class="buySuccess">
+    <div class="line">
+      <div class="blue">已拍下</div>
+      <img src="../../static/line.png" />
+      <div class="red">{{left_state}}</div>
+    </div>
+    <div class="main">
+      <div class="title">
+        <div class="name">您向
+          <span>{{datas.customer}}</span>购买{{datas.currencyType}}下单成功！</div>
+        <div class="time">{{datas.createTime}}</div>
+      </div>
+      <div class="list">
+        <div class="list_title">
+          <div class="t1 tt1">购买币种</div>
+          <div class="t1">购买数量</div>
+          <div class="t2">单价</div>
+          <div class="t1">付款方式</div>
+          <div class="t2">付款金额</div>
+          <div class="t2">订单状态</div>
+        </div>
+        <div class="list_content">
+          <!--购买币种-->
+          <div class="t1">{{datas.currencyType}}</div>
+          <!--数量-->
+          <div class="t1">{{datas.bidt}}</div>
+          <!--单价-->
+          <div class="t2">{{datas.unitPrice}} {{payType[datas.type]}}</div>
+          <!--方式-->
+          <div class="t1">{{payType[datas.type]}}</div>
+          <!--总价-->
+          <div class="t2">{{datas.price}} {{payType[datas.type]}}</div>
+          <!--状态-->
+          <div class="t2">{{orderstatus[datas.orderStatus]}}</div>
+        </div>
+        <!--代付款-->
+        <div class="list_num" v-if="status==='1'">
+          待付款：{{datas.price}} {{payType[datas.type]}}
+        </div>
+        <div class="list_num" v-if="status==='2'||status==='3'||status==='4'">
+          已付款：{{datas.price}} {{payType[datas.type]}}
+        </div>
+        <div class="list_num" v-if="status==='0'||status==='5'">
+          <s>待付款：{{datas.price}} {{payType[datas.type]}}</s>
+        </div>
+      </div>
+      <div class="message">
+        <div class="message_title">对方收款账号或收币地址请向对方确认</div>
+        <!--蛋生支付-->
+        <div class="eggzf" v-if="datas.projectType!=0&&datas.isEgg!=0">
+          <div class="zfb" v-if="datas.eggOrderDetails.payType!=2">
+            <img src="../../static/zfbimg.png" class="main_img" />
+            <div class="info">
+              <div class="egg_name">{{datas.eggOrderDetails.number}}</div>
+            </div>
+            <div class="egg_code">
+              <img :src="datas.eggOrderDetails.picUrl" class="min_code" />
+              <img :src="datas.eggOrderDetails.picUrl" class="max_code" />
+            </div>
+          </div>
+          <div class="zfb" v-if="datas.eggOrderDetails.payType!=1">
+            <img src="../../static/wximg.png" class="main_img" />
+            <div class="info">
+              <div class="egg_name">{{datas.eggOrderDetails.number}}</div>
+            </div>
+            <div class="egg_code">
+              <img :src="datas.eggOrderDetails.picUrl" class="min_code" />
+              <img :src="datas.eggOrderDetails.picUrl" class="max_code" />
+            </div>
+          </div>
+        </div>
+        <!--货币支付-->
+        <div class="hbzf" v-if="datas.projectType!=1">
+          <div class="cnyzf" v-if="payType[datas.type]==='CNY'">
+            <img src="../../static/cnyimg.png" class="main_img" />
+            <div class="info">
+              <div class="egg_name">{{datas.userAddressVo.bankName}} {{datas.userAddressVo.cnyuserName}}</div>
+              <div class="egg_name">{{datas.userAddressVo.cnyaddress}}</div>
+            </div>
+          </div>
+          <div class="bbzf" v-if="payType[datas.type]==='BTC'">
+            BTC收币地址：{{datas.userAddressVo.btcaddress}}
+          </div>
+          <div class="bbzf" v-if="payType[datas.type]==='ETH'">
+            ETH收币地址：{{datas.userAddressVo.ethaddress}}
+          </div>
+          <div class="bbzf" v-if="payType[datas.type]==='BIDT'">
+            BIDT收币地址：{{datas.userAddressVo.bidtaddress}}
+          </div>
+          <div class="bbzf" v-if="payType[datas.type]==='USDT'">
+            USDT收币地址：{{datas.userAddressVo.usdtaddress}}
+          </div>
+        </div>
+        <div class="message_title">联系对方</div>
+        <div class="message_content">
+          <div class="messcon_title">您可以在这开始与卖家交流了！</div>
+          <div class="message_main">
+            <!--<div class="l_message">
 							<img src="../../static/head.png"/>
 							<div class="r">
 								<div class="name_time">tom 2018-7-20 19:15:50</div>
@@ -111,52 +111,55 @@
 							</div>
 							<img src="../../static/head.png"/>
 						</div>-->
-						<div v-for="item in message" :class="item.userId==uid?'r_message':'l_message'">
-							<img :src="item.urlPic" v-if="item.userId!=uid" />
-							<div class="r">
-								<div class="name_time">{{item.userNickName}} {{item.createTime}}</div>
-								<div class="texts">{{item.content}}</div>
-							</div>
-							<img :src=item.urlPic v-if="item.userId==uid" />
-						</div>
-					</div>
-				</div>
-				<div class="message_btn">
-					<el-input placeholder="快向卖家询问他的收款账户进行付款吧~" v-model="message_text" @keyup.enter.native="websopen" clearable>
-					</el-input>
-					<div class="send_message" @click="websopen">发送消息</div>
-				</div>
-				<div class="statustxt">
-					{{statustext}}
-				</div>
-				<!--下单成功等待买家付款-->
-				<div class="state1" v-if="status==='1' && ordertitme !=0">
-					<div class="state1_time">付款剩余时间
-						<span>{{ordertitme}}</span>逾期将自动取消</div>
-					<div class="state1_text">请及时付款，若已付款请点击【我已付款】</div>
-					<div class="state1_send" @click="buy">我已付款</div>
-					<el-button type="text" @click="state1cancel">取消交易</el-button>
-					<div class="state1_tell">请勿随意取消订单！任意取消订单着，被交易对象投诉将影响系统信用分数，分数过低着账号会被冻结数天。</div>
-				</div>
-				<!--等待卖家确认收款-->
-				<div class="state1" v-if="status==='2'  && ordertitme !=0">
-					<div class="state1_text">请等待卖家核实后向您发放货币！</div>
-					<el-button type="text" @click="state1cancel">取消交易</el-button>
-					<div class="state1_tell">如果您已付款，请勿点击！</div>
-				</div>
+            <div v-for="item in message" :class="item.userId==uid?'r_message':'l_message'">
+              <img :src="item.urlPic" v-if="item.userId!=uid" />
+              <div class="r">
+                <div class="name_time">{{item.userNickName}} {{item.createTime}}</div>
+                <div class="texts">{{item.content}}</div>
+              </div>
+              <img :src=item.urlPic v-if="item.userId==uid" />
+            </div>
+          </div>
+        </div>
+        <div class="message_btn">
+          <el-input placeholder="快向卖家询问他的收款账户进行付款吧~" v-model="message_text" @keyup.enter.native="websopen" clearable>
+          </el-input>
+          <div class="send_message" @click="websopen">发送消息</div>
+        </div>
+        <div class="statustxt">
+          {{statustext}}
+        </div>
+        <!--下单成功等待买家付款-->
+        <div class="state1" v-if="status==='1' && ordertitme !=0">
+          <div class="state1_time">付款剩余时间
+            <span>{{ordertitme}}</span>逾期将自动取消</div>
+          <div class="state1_text">请及时付款，若已付款请点击【我已付款】</div>
+          <div class="state1_send" @click="buy">我已付款</div>
+          <el-button type="text" @click="state1cancel">取消交易</el-button>
+          <div class="state1_tell">请勿随意取消订单！任意取消订单着，被交易对象投诉将影响系统信用分数，分数过低着账号会被冻结数天。</div>
+        </div>
+        <!--等待卖家确认收款-->
+        <div class="state1" v-if="status==='2'">
+          <div class="state1_text">请等待卖家核实后向您发放货币！</div>
+          <el-button type="text" @click="state1cancel">取消交易</el-button>
+          <div class="state1_tell">如果您已付款，请勿点击！</div>
+        </div>
         <!-- 已过期 -->
-        <div class="state1" v-if="status !=4 &&  ordertitme ==0">
-					<div class="state1_text">交易超时， 已取消</div>
-					<div class="state1_tell" @click="wyss"><em>我要申诉</em></div>
-				</div>
-				<!--确认收币-->
-				<div class="state1" v-if="status==='3'  && ordertitme !=0">
-					<div class="state1_text">卖家已向您发放货币，请确认是否已收到？</div>
-					<div class="state1_time ">请在<span>{{ordertitme}}</span>内完成确认</div>
-					<div class="state1_send" @click="getb">确认已收到货币</div>
-				</div>
-				<!--待评价-->
-				<!--<div class="state1">
+        <div class="state1" v-if="status ==5">
+          <div class="state1_text">交易超时， 已取消</div>
+          <div class="state1_tell" @click="wyss">
+            <em>我要申诉</em>
+          </div>
+        </div>
+        <!--确认收币-->
+        <div class="state1" v-if="status==='3'">
+          <div class="state1_text">卖家已向您发放货币，请确认是否已收到？</div>
+          <div class="state1_time ">请在
+            <span>{{ordertitme}}</span>内完成确认</div>
+          <div class="state1_send" @click="getb">确认已收到货币</div>
+        </div>
+        <!--待评价-->
+        <!--<div class="state1">
 					<div class="radio_div">
 						<el-radio v-model="radios" label="0">很满意,好评！</el-radio>
 						<el-radio v-model="radios" label="1">不是很满意,中评！</el-radio>
@@ -165,35 +168,52 @@
 					<textarea placeholder="您还可以写下更多评价~"></textarea>
 					<div class="state1_send">提交评价</div>
 				</div>-->
-				<!--交易完成-->
-				<div class="state1" v-if="status==='4'">
-					<div class="state1_text">本次交易已完成，期待与您再次交易！</div>
-					<div class="state1_send" @click="tobuy">继续前往购买</div>
-				</div>
-				<!--买家取消后-->
-				<div class="state1" v-if="status==='0'">
-					<div class="state1_text">您已取消了本次交易，期待与您重新交易！</div>
-					<div class="state1_send" @click="tobuy">重新前往购买</div>
-				</div>
-				<!--卖家取消后-->
-				<!--<div class="state1" v-if="status==='0'">
+        <!--交易完成-->
+        <div class="state1" v-if="status==='4'">
+          <div class="state1_text">本次交易已完成，期待与您再次交易！</div>
+          <div class="state1_tell" @click="wyss">
+            <em>我要申诉</em>
+          </div>
+          <div class="state1_send" @click="tobuy">继续前往购买</div>
+        </div>
+        <!--买家取消后-->
+        <div class="state1" v-if="status==='0'">
+          <div class="state1_text">您已取消了本次交易，期待与您重新交易！</div>
+          <div class="state1_send" @click="tobuy">重新前往购买</div>
+        </div>
+        <!--卖家取消后-->
+        <!--<div class="state1" v-if="status==='0'">
 					<div class="state1_text">卖家已取消了本次交易，请重新购买别的吧！</div>
 					<div class="state1_send" @click="tobuy">重新前往购买</div>
 				</div>-->
-				<!--交易过期-->
-				<!-- <div class="state1" v-if="status==='5'">
-					<div class="state1_text">本次交易已过期，请重新前往购买别的吧！</div>
-					<div class="state1_send" @click="tobuy">重新前往购买</div>
-				</div> -->
-			</div>
-		</div>
-	</div>
+        <!--交易过期-->
+        <div class="state1" v-if="status==='5'">
+          <!-- <div class="state1_text">本次交易已过期，请重新前往购买别的吧！</div> -->
+          <div class="state1_send" @click="tobuy">重新前往购买</div>
+        </div>
+      </div>
+    </div>
+   	<el-dialog
+  title="请使用微信扫描二维码添加客服，进行申诉"
+  :visible.sync="centerDialogVisible"
+  width="25%"
+  center
+  :show-close = false
+	>
+  <img class="img4" src="../../static/wyss.png" alt="">
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="centerDialogVisible = false">X</el-button>
+    <!-- <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button> -->
+  </span>
+</el-dialog>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      centerDialogVisible: false,
       orderstatus: [
         "已取消",
         "待付款",
@@ -213,7 +233,8 @@ export default {
       message: "",
       uid: localStorage.otc_uId,
       ordertitme: null,
-      djs: ""
+      djs: "",
+      timer0:""
     };
   },
   created() {
@@ -222,27 +243,46 @@ export default {
     //获取聊天
     this.getmessage();
     //建立socket
-		this.websocketopen();
-		this.gettime()
+    this.websocketopen();
+    this.gettime();
+    // 轮询获取时间
+			this.getNewTime ();
   },
+  beforeDestroy () {
+				clearInterval(this.timer0 )
+			},
   methods: {
-    wyss () {
-       const h = this.$createElement;
-        this.$msgbox({
-          // title: '',
-          message: h('p', null, [
-            h('div', {style: 'text-align: center;marginBottom: 0.1rem;'}, '请使用微信扫描二维码添加客服，进行申诉 '),
-            h('div', { style: 'background: url("../../static/wyss.png"); width: 2rem;height: 2rem; background-size: 100%; margin: 0 auto;' }, )
-          ]),
-          showConfirmButton: false,
-          showCancelButton: true,
-          cancelButtonText: 'X',
-        }).then(action => {
-          // this.$message({
-          //   type: 'info',
-          //   message: 'action: ' + action
-          // });
-        });
+    getNewTime () {
+				// clearInterval(this.timer0);
+				 this.timer0 = setInterval(() => {
+					 this.getStatus();
+           this.gettime();
+        } , 15000);
+        
+			},
+    wyss() {
+      this.centerDialogVisible = true;
+      return;
+      const h = this.$createElement;
+      this.$msgbox({
+        // title: '',
+        message: h("p", null, [
+          h(
+            "div",
+            { style: "text-align: center;marginBottom: 0.1rem;" },
+            "请使用微信扫描二维码添加客服，进行申诉 "
+          ),
+          h("div", {
+            style:
+              'background: url("../../static/wyss.png"); width: 2rem;height: 2rem; background-size: 100%; margin: 0 auto;'
+          })
+        ]),
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: "X",
+        center: true
+      }).then(action => {
+      });
     },
     gettime() {
       let vm = this;
@@ -257,20 +297,25 @@ export default {
         success(res) {
           // vm.time2
           clearInterval(vm.djs);
-          let time1 = new Date() - 0 ;
-					let time2 = new Date(res.data.overdueTime) - 0;
-					// let time3 = (new Date(res.data) - 0) + 1800000;
-					console.log(time1);
-					console.log(time2);
+          let time1 = new Date() - 0;
+          let time2 = new Date(res.data.overdueTime) - 0;
+          // let time3 = (new Date(res.data) - 0) + 1800000;
+          console.log(time1);
+          console.log(time2);
           vm.djs = setInterval(() => {
-						 time1 = new Date() - 0 ;
-						 if(time1 <= time2) {
-							 	vm.ordertitme = vm.formatDuring(time2 - time1)
-						 }else {
-							 clearInterval(vm.djs);
-							 vm.ordertitme = 0;
-						 }
-					}, 100);
+            time1 = new Date() - 0;
+            if (time1 <= time2) {
+              vm.ordertitme = vm.formatDuring(time2 - time1);
+            } else {
+              clearInterval(vm.djs);
+              vm.ordertitme = 0;
+              if (vm.status == 1) {
+                vm.status = "5";
+              } else if (vm.status == 2 || vm.status == 3) {
+                vm.status = "4";
+              }
+            }
+          }, 100);
         }
       });
     },
@@ -388,7 +433,7 @@ export default {
     //我已付款
     buy() {
       let vm = this;
-      
+
       this.$confirm("您确认是否已转账给商家?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -414,7 +459,6 @@ export default {
                 });
                 vm.getStatus();
                 vm.gettime();
-                
               }
             }
           });
@@ -429,7 +473,7 @@ export default {
     //确认收币
     getb() {
       let vm = this;
-      
+
       this.$confirm("您确认是否已收到商家的币?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -559,14 +603,15 @@ export default {
 };
 </script>
 <style lang="scss">
+.buySuccess {
   .el-message-box__btns {
-  text-align: center;
-  border-radius: 5px;
-}
-.el-message-box {
-  width: 300px;
-  & /deep/ .el-button--small {
-    border-radius: 50%;
+    // border-radius: 5px;
+  }
+  .el-message-box {
+    width: 300px;
+    & /deep/ .el-button--small {
+      // border-radius: 10px;
+    }
   }
 }
 </style>
@@ -580,7 +625,22 @@ export default {
   padding: 0.64rem 1.5rem 0.64rem 1rem;
   display: flex;
   align-items: center;
+  & /deep/ .el-dialog__title {
+			font-size: 0.2rem;
+		}
+		& /deep/ .el-dialog__body {
+			padding: 0;
+		}
+		& /deep/  .el-dialog__header {
+			padding: 0;
+		}
 
+ 		& /deep/ .img4 {
+			width: 30%;
+			position: relative;
+			left:50%;
+			transform: translateX(-50%);
+		}
 
   .line {
     margin-right: 0.2rem;
@@ -863,12 +923,12 @@ export default {
           color: #999999;
           margin-top: 0.05rem;
           em {
-							font-style: normal;
-							cursor: pointer;
-              &:hover {
-								color: rgba(68,158,212,1);
-							}
-						}
+            font-style: normal;
+            cursor: pointer;
+            &:hover {
+              color: rgba(68, 158, 212, 1);
+            }
+          }
         }
         .radio_div {
           width: 4.5rem;

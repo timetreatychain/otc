@@ -133,11 +133,11 @@
 				<!--确认收钱-->
 				<div class="state1" v-if="status==='2'">
 					<div class="state1_text">卖家已向您发放货币，请确认是否收到?</div>
-					<div class="state1_text">若已收到，请在{{ordertitme}}内付款，并请点击【我已付款】</div>
+					<div class="state1_time">若已收到，请在<span>{{ordertitme}}</span>内付款，并请点击【我已付款】</div>
 					<div class="state1_send" @click="getb">我已付款</div>
 				</div>
 				<!-- 已过期1 -->
-        <div class="state1" v-if="status !=4 &&  ordertitme ==0">
+        <div class="state1" v-if="status ==5">
 					<div class="state1_text">交易超时， 已取消</div>
 					<div class="state1_tell" @click="wyss"><em>我要申诉</em></div>
 				</div>
@@ -148,15 +148,29 @@
 				</div>
 				<div class="state1" v-if="status==='4'">
 					<div class="state1_text">本次交易已完成，期待与您再次交易！</div>
+					<div class="state1_tell" @click="wyss"><em>我要申诉</em></div>
 					<div class="state1_send" @click="tobuy">前往购买</div>
 				</div>
 				<!--交易过期-->
-				<!-- <div class="state1" v-if="status==='5'">
-					<div class="state1_text">本次交易已过期，请重新前往购买别的吧！</div>
+				<div class="state1" v-if="status==='5'">
+					<!-- <div class="state1_text">本次交易已过期，请重新前往购买别的吧！</div> -->
 					<div class="state1_send" @click="tobuy">重新前往购买</div>
-				</div> -->
+				</div>
 			</div>
 		</div>
+		<el-dialog
+  title="请使用微信扫描二维码添加客服，进行申诉"
+  :visible.sync="centerDialogVisible"
+  width="25%"
+  center
+	:show-close = false
+	>
+  <img class="img4" src="../../static/wyss.png" alt="">
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="centerDialogVisible = false">X</el-button>
+    <!-- <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button> -->
+  </span>
+</el-dialog>
 	</div>
 </template>
 
@@ -164,6 +178,7 @@
 	export default{
 		data(){
 			return{
+				centerDialogVisible: false,
 				orderstatus:['已取消','等待卖家发币','卖家已发币','等待卖家确认','交易完成','已过期'],
 				payType: ["", "BIDT", "BTC", "ETH","CNY"],
 				message_text:'',
@@ -176,7 +191,8 @@
 				message:'',
 				uid:localStorage.otc_uId,
 				ordertitme:null,
-      djs: ""
+			djs: "",
+			timer0 : ""
 			}
 		},
 		created(){
@@ -187,9 +203,22 @@
 			//建立socket
 			this.websocketopen()
 			this.gettime ();
+			// 轮询获取时间
+			this.getNewTime ();
 		},
+		beforeDestroy () {
+				clearInterval(this.timer0 )
+			},
 		methods:{
+			getNewTime () {
+				this.timer0 = setInterval(() => {
+					this.getStatus();
+					 this.gettime();
+				} , 15000);
+			},
 			wyss () {
+				this.centerDialogVisible = true;
+      return;
        const h = this.$createElement;
         this.$msgbox({
           // title: '',
@@ -199,7 +228,8 @@
           ]),
           showConfirmButton: false,
           showCancelButton: true,
-          cancelButtonText: 'X',
+					cancelButtonText: 'X',
+					center: true,
         }).then(action => {
           // this.$message({
           //   type: 'info',
@@ -232,6 +262,11 @@
 						 }else {
 							 clearInterval(vm.djs);
 							 vm.ordertitme = 0;
+							 if(vm.status == 1) {
+								 vm.status = "5";
+							 }else if(vm.status == 2 || vm.status == 3) {
+								 vm.status = "4"
+							 }
 						 }
 					}, 100);
         }
@@ -441,13 +476,40 @@
 		}
 	}
 </script>
-
+<style lang="scss">
+  .el-message-box__btns {
+  // text-align: center;
+  // border-radius: 5px;
+}
+.el-message-box {
+  // width: 300px;
+  & /deep/ .el-button--small {
+    // border-radius: 10px;
+  }
+}
+</style>
 <style lang="scss" scoped>
 	.Buyadvertise{
 		box-sizing: border-box;
 		padding: 0.64rem 1.5rem 0.64rem 1rem;
 		display: flex;
 		align-items: center;
+		& /deep/ .el-dialog__title {
+			font-size: 0.2rem;
+		}
+		& /deep/ .el-dialog__body {
+			padding: 0;
+		}
+		& /deep/  .el-dialog__header {
+			padding: 0;
+		}
+
+ 		& /deep/ .img4 {
+			width: 30%;
+			position: relative;
+			left:50%;
+			transform: translateX(-50%);
+		}
 		.line{
 			margin-right: 0.2rem;
 			display: flex;

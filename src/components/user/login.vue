@@ -108,6 +108,7 @@
 							localStorage.otc_username=data.data.nickName;
 							localStorage.userdate= JSON.stringify(data.data);
 							localStorage.shopper = data.data.userCommodityStatus;
+							localStorage.otc_account=data.data.username;
 							location.reload();
 							vm.$router.push({
 								path: "/"

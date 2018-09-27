@@ -17,19 +17,22 @@
         </div>
         <ul class="info_r">
           <li>
-            <i>{{initinfo.likeCount}}</i>
-            <span></span>
-            <p>{{$t("app.usercenter.hprs")}}</p>
+            <i>{{initinfo.cashDeposit}}<small>bidt</small></i>
+            <!--<span></span>-->
+            <!--<p>{{$t("app.usercenter.hprs")}}</p>-->
+            <p>保证金</p>
           </li>
           <li>
-            <i>{{initinfo.hateCount}}</i>
-            <span></span>
-            <p>{{$t("app.usercenter.cprs")}}</p>
+            <i>{{initinfo.payCount}}<small>笔</small></i>
+            <!--<span></span>
+            <p>{{$t("app.usercenter.cprs")}}</p>-->
+            <p>成交量</p>
           </li>
           <li>
-            <i>{{initinfo.payCount}}</i>
-            <span></span>
-            <p>{{$t("app.usercenter.jycs")}}</p>
+            <i>{{initinfo.successRat}}%</i>
+            <!--<span></span>
+            <p>{{$t("app.usercenter.jycs")}}</p>-->
+            <p>成交率</p>
           </li>
         </ul>
       </div>
@@ -44,7 +47,7 @@
           <ul class="safesetting" v-if="showaj">
             <li>{{$t("app.usercenter.aqsz")}}</li>
             <li v-if="initinfo.phoneNum">{{$t("app.usercenter.bdsj")}}
-              <span class="sec">{{initinfo.phoneNum}}</span>
+              <span class="sec secs">{{initinfo.phoneNum}}</span>
               <!-- <span class="third">{{$t("app.usercenter.bd")}}</span> -->
               <span class="third" @click="xgsjh">{{$t("app.usercenter.xg")}}</span>
             </li>
@@ -54,17 +57,19 @@
               <!-- <span class="third">{{$t("app.usercenter.bd")}}</span> -->
               <span v-if="initinfo.phoneNum" class="third">{{$t("app.usercenter.xg")}}</span>
               <!-- <span v-if="!initinfo.phoneNum" class="third" @click="bcsjh">保存</span> -->
-              <span v-if="!initinfo.phoneNum" class="third" @click="xgsjh">修改</span>
+              <span v-if="!initinfo.phoneNum && initinfo.account" class="third" @click="xgsjh">修改</span>
+              <!-- <span v-if="!initinfo.phoneNum && !initinfo.account" class="third" @click="changePhonenum">修改1</span> -->
             </li>
             <!-- <li>{{$t("app.usercenter.bdyx")}}
               <span class="sec">996105570@qq.com</span>
               <span class="third">{{$t("app.usercenter.xg")}}</span>
             </li> -->
-            <li>
+            <li v-if="acounttype != 'qkid'">
               {{$t("app.usercenter.dlmm")}}
               <span class="third" @click="xgmm">{{$t("app.usercenter.xg")}}</span>
             </li>
             <li>{{$t("app.usercenter.bdqkdd")}}
+              <span class="sec secs">{{initinfo.id}}</span>
             </li>
           </ul>
           <!-- 修改手机号 -->
@@ -206,7 +211,8 @@ export default {
       bzjsta: {},
       bzjnum: "",
       initinfo: {},
-      initadress: ""
+      initadress: "",
+      acounttype:""
     };
   },
   components: {
@@ -221,9 +227,38 @@ export default {
     this.getinit();
     // this.getinfkonw();
     this.checktype();
-    
+    // this.getblock()
+  },
+  watch : {
+    initinfo (val) {
+      if(val && val.account.indexOf("@") != -1) {
+        this.acounttype = 'eamil';
+      }else if(val.account.length != 11){
+        this.acounttype = 'qkid';
+      }
+    }    
   },
   methods: {
+  	//区块地址
+  	getblock(){
+  		let vm=this;
+  		$.ajax({
+  			type:"post",
+  			url:contextPath1+"/api/certification/getBlockId",
+  			async:true,
+  			dataType:'json',
+  			data:{
+  				account:localStorage.otc_account,
+  				token:localStorage.otc_token,
+  				project:2
+  			},
+  			success(res){
+  				if(res.state.code==='20000'){
+  					vm.blockadress=res.data||''
+  				}
+  			}
+  		});
+  	},
     checktype () {
       if(this.$route.query && this.$route.query.type == 3) {
         this.showsksz();
@@ -336,10 +371,11 @@ export default {
       });
     },
     xgsjh() {
-      this.initinfo.phoneNum = "";
+      // this.initinfo.phoneNum = "";
       this.index1 = 4;
       this.showaj = false;
     },
+
     
     bcsjh() {
       // let vm = this;
@@ -619,6 +655,7 @@ export default {
           height: 0.86rem;
           overflow: hidden;
           margin-right: 0.1rem;
+          border-radius: 50%;
         }
         .info_l_r {
           // clear: both;
@@ -640,6 +677,7 @@ export default {
           float: left;
           margin-left: 0.4rem;
           i {
+          	margin-top: 0.2rem;
             font-style: normal;
             display: block;
             height: 0.3rem;
@@ -648,15 +686,20 @@ export default {
             color: #3399ff;
             font-size: 0.28rem;
             margin-bottom: 0.1rem;
+            small{
+            	font-size: 0.12rem;
+            	color: black;
+            	margin-left: 5px;
+            }
           }
-          span {
+          /*span {
             display: block;
             width: 0.36rem;
             background: url("../../static/usercenter/zan.png") no-repeat center;
             background-size: 100%;
             height: 0.4rem;
             margin: 0 auto;
-          }
+          }*/
           p {
             height: 0.3rem;
             margin-top: 0.05rem;
@@ -739,6 +782,9 @@ export default {
           padding-left: 0.2rem;
           border-bottom: 0.01rem solid #efefef;
           position: relative;
+          .secs{
+          	margin-left: 0.5rem;
+          }
           .sec {
             display: inline-block;
             // margin-left: 0.12rem;
@@ -788,6 +834,10 @@ export default {
           }
           &:last-of-type {
             border-bottom: none;
+          }
+          .blockadres{
+          	margin-left: 0.5rem;
+          	color: gray;
           }
         }
       }

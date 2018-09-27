@@ -98,7 +98,20 @@
 		</div>
 		<!--留言-->
 		<div class="right">
-			<div class="title">卖家 <span>{{datas.userName}}</span></div>
+			<div class="title">
+				<div class="info">
+					<img :src="datas.picUrl" class="head"/>
+					<div class="names">
+						{{datas.userName}}
+						<div class="money"><img src="../../static/bzj.png"/>已缴保证金</div>
+					</div>
+				</div>
+				<div class="num">
+					成交 {{datas.payCount}}笔
+					<div v-if="datas.payCount>0">成交率 {{datas.successRat}}%</div>
+					<div v-if="datas.payCount<=0">暂无交易</div>
+				</div>
+			</div>
 			<div class="text">广告留言</div>
 			<div class="textcontent">{{datas.payTreaty}}</div>
 		</div>
@@ -122,7 +135,8 @@
 		          label: 'CNY'
 		        }],
 		        value_methods: '',
-		        l_inp:'',
+						l_inp:'',
+						toBackl_inp:"",
 		        r_inp:'',
 		        quota:'',
 		        btn_sen:true
@@ -133,6 +147,8 @@
 		},
 		watch : {
 			l_inp (val) {
+				this.toBackl_inp = val;
+				// console.log(this.toBackl_inp);
 				this.l_inp = this.toDecimal(val);
 				return this.toDecimal(val);
 			}
@@ -158,14 +174,19 @@
         f = x2[0] + "." + x2[1].slice(0, 8);
         return f;
       } else {
-        let f = x1.toString();
-        if (f.indexOf(".") == -1) {
-          return f;
-        } else {
-          let x2 = f.split(".");
-          f = x2[0] + "." + x2[1].slice(0, 8);
-          return f;
-        }
+				
+				let str = Math.ceil(x1 * 100000000) / 100000000;
+				return str;
+
+        // let f = x1.toString();
+        // if (f.indexOf(".") == -1) {
+        //   return f;
+        // } else {
+        //   let x2 = f.split(".");
+				// 	// f = x2[0] + "." + x2[1].slice(0, 8);
+				// 	f = x2[0] + "." + Math.floor(Number(x2[1].slice(0, 9)) / 10 );
+        //   return f;
+        // }
       }
     },
 			//获取信息
@@ -257,6 +278,9 @@
 			},
 			//购买下单
 			sends(payType){
+				console.log(1111111);
+				console.log(this.toBackl_inp)
+				console.log(2222222);
 				let vm=this;
 					$.ajax({
 						type:"post",
@@ -267,7 +291,7 @@
 							languageType: localStorage.otc_lang || "zh",
 							token:localStorage.otc_token,
 							orderId:vm.datas.uId,
-							dealNum:vm.l_inp,
+							dealNum:vm.toBackl_inp,
 							payType
 						},
 						success(res){
@@ -455,10 +479,40 @@
 			box-shadow:2px 0px 8px rgba(171,171,171,1);
 			.title{
 				margin-bottom: 0.1rem;
-				font-size: 0.24rem;
-				span{
-					font-size: 0.2rem;
-					color: #3399FF;
+				display: flex;
+				align-items: center;
+				.info{
+					display: flex;
+					align-items: center;
+					.head{
+						width: 0.4rem;
+						height: 0.4rem;
+						border-radius: 50%;
+					}
+					.names{
+						margin-left: 5px;
+						color: #3399FF;
+						font-size: 0.2rem;
+						.money{
+							font-size: 0.12rem;
+							color: #FF6600;
+							display: flex;
+							align-items: center;
+							img{
+								width: 0.15rem;
+								height: 0.15rem;
+							}
+						}
+					}
+				}
+				.num{
+					border-left: 1px solid #999999;
+					padding-left: 0.2rem;
+					margin-left: 0.2rem;
+					font-size: 0.16rem;
+					div{
+						color: #999999;
+					}
 				}
 			}
 			.text{

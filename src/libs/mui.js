@@ -7441,9 +7441,9 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			}
 		}
 		if(!$.os.plus || type === 'div') {
-			return createPopup(createInner(message, title || '温馨提示') + createButtons([btnValue || '关闭']), callback);
+			return createPopup(createInner(message, title || '提示') + createButtons([btnValue || '关闭']), callback);
 		}
-		return plus.nativeUI.alert(message, callback, title || '温馨提示', btnValue || '关闭');
+		return plus.nativeUI.alert(message, callback, title || '提示', btnValue || '关闭');
 	};
 	var createConfirm = function(message, title, btnArray, callback, type) {
 		if(typeof message === 'undefined') {

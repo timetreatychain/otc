@@ -3,10 +3,12 @@
     <h4 class="title">公告</h4>
     <div class="page">
       <ul class="page_l">
-        <li v-for="(item, index) in pagelist" :key="item.id" :class="{'cur' : index0 == index}" @click="godetails(index)">{{item.title}}</li>
+        <!--<li v-for="(item, index) in pagelist" :key="item.id" :class="{'cur' : index0 == index}" @click="godetails(index)">{{item.title}}</li>-->
+        <router-link v-for="(item,index) in pagelist" :key="index" to='' :class="{'cur':index0==item.id}" @click.native="todetail(item.id,index)" >{{item.title}}</router-link>
       </ul>
       <div class="page_r">
-        <div v-for="(item , index) in pagelist" v-if="index0 == index" :key="item.id">
+      	<router-view></router-view>
+        <!--<div v-for="(item , index) in pagelist" v-if="index0 == index" :key="item.id">
           <div class="maintitle">
             {{item.mainHeadin}}
           </div>
@@ -15,7 +17,7 @@
           </p>
           <div class="contett" v-html="item.content">
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
@@ -25,14 +27,28 @@
 export default {
   data() {
     return {
-      index0: 0,
-      pagelist: ""
+      index0:1,
+      pagelist: "",
+      ids:this.$route.query.id||1
     };
+  },
+  created(){
+  	this.todetail(this.ids)
   },
   mounted() {
     this.getinit();
   },
   methods: {
+  	todetail(id){
+  		this.$router.push({
+  			path:'/details',
+  			query:{id}
+  		})
+  		this.index0=id;
+//		var i=".a"+id;
+//		$(i).css("background","#cdcdcd");
+//		$(i).siblings().css("background","white")
+  	},
     godetails(i) {
       this.index0 = i;
       // this.$router.push('/details/'+ i);
@@ -40,13 +56,15 @@ export default {
     getinit() {
       let vm = this;
       $.ajax({
-        type: "get",
+        type: "post",
         url: contextPath + "/api/shopping/getAnnouncement",
         async: true,
         dataType: "json",
         data: {
           languageType: localStorage.otc_lang || "zh",
-          token: localStorage.otc_token
+          token: localStorage.otc_token,
+          page:1,
+          row:10
         },
         success(res) {
           if (res.state.code === "20000") {
@@ -82,7 +100,11 @@ export default {
     .page_l {
       line-height: 0.65rem;
       margin-right: 0.2rem;
-      li {
+      /*.a1{
+      	background: #cdcdcd;
+      }*/
+      a {
+      	display: block;
         cursor: pointer;
         width: 3rem;
         // overflow: hidden;

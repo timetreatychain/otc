@@ -179,16 +179,40 @@ export default {
         f = x2[0] + "." + x2[1].slice(0, 8);
         return f;
       } else {
-        let f = x1.toString();
-        if (f.indexOf(".") == -1) {
-          return f;
-        } else {
-          let x2 = f.split(".");
-          f = x2[0] + "." + x2[1].slice(0, 8);
-          return f;
-        }
+				
+				let str = Math.ceil(x1 * 100000000) / 100000000;
+				return str;
+
+        // let f = x1.toString();
+        // if (f.indexOf(".") == -1) {
+        //   return f;
+        // } else {
+        //   let x2 = f.split(".");
+				// 	// f = x2[0] + "." + x2[1].slice(0, 8);
+				// 	f = x2[0] + "." + Math.floor(Number(x2[1].slice(0, 9)) / 10 );
+        //   return f;
+        // }
       }
     },
+    // toDecimal(x1) {
+    //   console.log(x1);
+    //   if (isNaN(x1)) {
+    //     let x = x1.split(" ")[0];
+    //     var f = parseFloat(x);
+    //     let x2 = x.split(".");
+    //     f = x2[0] + "." + x2[1].slice(0, 8);
+    //     return f;
+    //   } else {
+    //     let f = x1.toString();
+    //     if (f.indexOf(".") == -1) {
+    //       return f;
+    //     } else {
+    //       let x2 = f.split(".");
+    //       f = x2[0] + "." + x2[1].slice(0, 8);
+    //       return f;
+    //     }
+    //   }
+    // },
     sel(type) {
       this.type = type;
       this.getOrder(1, 10, type);

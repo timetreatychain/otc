@@ -222,7 +222,7 @@ canvas {
 }
 
 .mui-popup-title {
-	font-size: 0.26rem;
+	font-size:16px;
 	font-weight: 500;
 	color: #222222;
 	text-align: left;
@@ -233,6 +233,7 @@ canvas {
 	font-size: 14px;
 	color: #6a6a6a;
 	margin: 5px 0 0;
+	text-align: left;
 }
 
 .mui-popup-buttons {
@@ -251,7 +252,7 @@ canvas {
 .mui-popup-button {
 	float: right;
 	/* width: 0.2rem; */
-	font-size: 0.2rem;
+	font-size: 12px;
 	/* line-height: 0.3rem; */
 	position: relative;
 	display: block;
@@ -268,7 +269,7 @@ canvas {
 	-webkit-box-flex: 1;
 	border-radius: 2px;
 	margin-right: 10px;
-	padding: 0.12rem;
+	padding: 4px 8px;
 }
 
 .mui-popup-button:after {
@@ -298,6 +299,7 @@ canvas {
 .mui-popup-button:first-child:last-child {
 	/* border-radius: 0 0 13px 13px; */
 	border-radius: 2px;
+	margin-top: 9px;
 }
 
 .mui-popup-button:last-child {
@@ -310,7 +312,7 @@ canvas {
 }
 
 .mui-popup-button.mui-popup-button-bold {
-	font-weight: 600;
+	font-weight: 300;
 }
 
 .mui-popup-input input {

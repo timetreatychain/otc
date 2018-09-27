@@ -11,6 +11,7 @@
 		<div class="main">
 			<div class="main_title">
 				<div class="who">{{$t('sell.list_title[0]')}}</div>
+				<div class="credit">信用</div>
 				<!-- <div class="currency">{{$t('sell.list_title[1]')}}</div> -->
 				<div class="number">{{$t('sell.list_title[2]')}}</div>
 				<div class="method">{{$t('sell.list_title[3]')}}</div>
@@ -19,7 +20,19 @@
 			</div>
 			<div class="main_list" v-for="item in list">
 				<!--名字-->
-				<div class="who">{{item.userName}}</div>
+				<div class="who">
+					<img :src="item.picUrl" class="head"/>
+					<div class="names">
+						{{item.userName}}
+						<div class="money"><img src="../../static/bzj.png"/>已缴保证金</div>
+					</div>
+				</div>
+				<!--信用-->
+				<div class="credit">
+					<div>成交 {{item.payCount}} </div>
+					<div class="rate" v-if="item.payCount>0">成交率 {{item.successRat}}%</div>
+					<div class="rate"  v-if="item.payCount<=0">暂无交易</div>
+				</div>
 				<!--币种-->
 				<!-- <div class="currency">{{item.currencyType}}</div> -->
 				<!--数量-->
@@ -107,7 +120,26 @@
           }
         });
       },
-			toDecimal(x1) {
+		// 	toDecimal(x1) {
+    //   console.log(x1);
+    //   if (isNaN(x1)) {
+    //     let x = x1.split(" ")[0];
+    //     var f = parseFloat(x);
+    //     let x2 = x.split(".");
+    //     f = x2[0] + "." + x2[1].slice(0, 8);
+    //     return f;
+    //   } else {
+    //     let f = x1.toString();
+    //     if (f.indexOf(".") == -1) {
+    //       return f;
+    //     } else {
+    //       let x2 = f.split(".");
+    //       f = x2[0] + "." + x2[1].slice(0, 8);
+    //       return f;
+    //     }
+    //   }
+		// },
+		toDecimal(x1) {
       console.log(x1);
       if (isNaN(x1)) {
         let x = x1.split(" ")[0];
@@ -116,14 +148,19 @@
         f = x2[0] + "." + x2[1].slice(0, 8);
         return f;
       } else {
-        let f = x1.toString();
-        if (f.indexOf(".") == -1) {
-          return f;
-        } else {
-          let x2 = f.split(".");
-          f = x2[0] + "." + x2[1].slice(0, 8);
-          return f;
-        }
+				
+				let str = Math.ceil(x1 * 100000000) / 100000000;
+				return str;
+
+        // let f = x1.toString();
+        // if (f.indexOf(".") == -1) {
+        //   return f;
+        // } else {
+        //   let x2 = f.split(".");
+				// 	// f = x2[0] + "." + x2[1].slice(0, 8);
+				// 	f = x2[0] + "." + Math.floor(Number(x2[1].slice(0, 9)) / 10 );
+        //   return f;
+        // }
       }
     },
 			change_message() {
@@ -329,24 +366,32 @@
 				}
 				.currency{
 					width: 10%;
-					text-align: center;
+					text-align: left;
+				}
+				.credit{
+					width: 10%;
+					text-align: left;
+					box-sizing: border-box;
+			      	padding-left: 2%;
 				}
 				.number{
 					width: 15%;
-					text-align: center;
+					text-align: left;
+					box-sizing: border-box;
+			      	padding-left: 2%;
 				}
 				.method{
-					width: 20%;
-					text-align: center;
+					width: 13%;
+					text-align: left;
 				}
 				.quota{
 					// width: 15%;
 					width: 18%;
-					text-align: center;
+					text-align: left;
 				}
 				.price{
-					// width: 24%;
-					width: 24%;
+					width: 20%;
+					text-align: left;
 				}
 			}
 			.main_list{
@@ -363,33 +408,62 @@
 					width: 10%;
 					text-align: left;
 					color: #666666;
-					overflow: hidden;
-					text-overflow: ellipsis;
+					display: flex;
+					align-items: center;
+					font-size:0.18rem;
+					.head{
+						width: 0.4rem;
+						height: 0.4rem;
+						margin-right: 5px;
+						border-radius: 50%;
+					}	
+					.money{
+						display: flex;
+						align-items: center;
+						font-size: 0.12rem;
+						color: #FF6600;
+						img{
+							width: 0.1rem;
+						}
+					}	
 				}
 				.currency{
 					width: 11%;
 					text-align: center;
 					color: #282828;
 				}
+				.credit{
+					width: 10%;
+			      	box-sizing: border-box;
+			      	padding-left: 2%;
+			        text-align: left;
+			        color: #282828;
+			        .rate{
+			        	color: gray;
+			        	font-size: 0.12rem;
+			        }
+				}
 				.number{
 					// width: 12%;
 					width: 15%;
-					text-align: center;
+					text-align: left;
 					color: #666666;
+					box-sizing: border-box;
+			      	padding-left: 2%;
 				}
 				.method{
-					text-align: center;
-					width: 20%;
+					text-align: left;
+					width: 13%;
 					color: #666666;
 				}
 				.quota{
-					width: 20%;
-					text-align: center;
+					width: 18%;
+					text-align: left;
 					color: #666666;
 				}
 				.price{
 					width: 20%;
-					text-align: center;
+					text-align: left;
 					cursor: #282828;
 				}
 				.btn{

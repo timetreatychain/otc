@@ -5,8 +5,9 @@
 		      <!-- <el-carousel-item style="height: 400px;">
 		        <router-link to="/announcement" tag="img"  src="../../static/banner.png"/>
 		      </el-carousel-item> -->
-		      <el-carousel-item style="height: 400px;">
-		        <router-link to="/announcement" tag="img" src="../../static/banner1.png" @click="check" style="cursor: pointer;"/>
+		      <el-carousel-item style="height: 400px;" v-for="item in banners">
+		      		<img :src="item.picUrl" @click="check(item.id)"/>
+		        <!--<router-link to="/announcement" tag="img" src="../../static/banner1.png" @click="check" style="cursor: pointer;"/>-->
 		      </el-carousel-item>
 		    </el-carousel>
 		</div>
@@ -59,15 +60,32 @@
 	export default{
 		data(){
 			return{
-				
+				banners:""
 			}
 		},
 		created(){
-			
+			this.getbanner()
 		},
 		methods:{
-			check(){
-				
+			check(id){
+				this.$router.push({
+					path:'/announcement',
+					query:{id}
+				})
+			},
+			getbanner(){
+				let vm=this;
+				$.ajax({
+					type:"get",
+					url:contextPath+"/api/shopping/getHomeAnnouncement",
+					async:true,
+					dataType:"json",
+					success(res){
+						if(res.state.code==='20000'){
+							vm.banners=res.data;
+						}
+					}
+				});
 			},
 			mysell(){
 				this.$router.push({

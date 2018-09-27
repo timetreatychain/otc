@@ -35,7 +35,7 @@
                 </el-select>
               </div>
               <!--数量-->
-              <el-input @blur="checknum" v-model="num" clearable :placeholder="plcer3"></el-input>
+              <el-input @blur="checknum" v-model="num" clearable :placeholder="plcer3" @keyup.native="reg($event,'num')" ></el-input>
               <!--地区-->
               <el-select v-model="value_area" clearable placeholder="请选择">
                 <el-option v-for="item in options_area" :key="item.value" :label="item.label" :value="item.value">
@@ -81,7 +81,7 @@
               <div class="price">
                 <!--单价-->
                 <div class="inp">
-                  <el-input v-model="price_cny" clearable :placeholder="placehiler"></el-input>
+                  <el-input v-model="price_cny" clearable :placeholder="placehiler" @keyup.native="reg($event,'priceCNY')" ></el-input>
                   <div class="unit">{{value_cny}}</div>
                 </div>
                 <!--当前市场价格-->
@@ -90,11 +90,11 @@
               <!--限额-->
               <div class="quota">
                 <!--最低-->
-                <el-input @blur="checkcnymin" v-model="quota_min2" clearable :placeholder="cnyplacer"></el-input>
+                <el-input @blur="checkcnymin" v-model="quota_min2" clearable :placeholder="cnyplacer" @keyup.native="reg($event,'quotaMIN2')"></el-input>
                 <div class="unit">CNY</div>
                 <span>-</span>
                 <!--最高-->
-                <el-input v-model="quota_max2" clearable placeholder="填写最高限额"></el-input>
+                <el-input v-model="quota_max2" clearable placeholder="填写最高限额" @keyup.native="reg($event,'quotaMAX2')"></el-input>
                 <div class="unit">CNY</div>
               </div>
             </div>
@@ -138,7 +138,7 @@
                 <div class="price">
                   <!--单价-->
                   <div class="inp">
-                    <el-input v-model="price" clearable :placeholder="placehiler"></el-input>
+                    <el-input v-model="price" clearable :placeholder="placehiler" @keyup.native="reg($event,'prices')"></el-input>
                     <div class="unit">{{value_deal}}</div>
                   </div>
                   <!--市场价-->
@@ -147,11 +147,11 @@
                 <!--限额-->
                 <div class="quota">
                   <!--最低-->
-                  <el-input @blur="checkaddmoneymin" v-model="quota_min1" clearable :placeholder="addpubmoney"></el-input>
+                  <el-input @blur="checkaddmoneymin" v-model="quota_min1" clearable :placeholder="addpubmoney" @keyup.native="reg($event,'quotaMIN1')"></el-input>
                   <div class="unit">{{value_deal}}</div>
                   <span>-</span>
                   <!--最高-->
-                  <el-input v-model="quota_max1" clearable placeholder="填写最高限额"></el-input>
+                  <el-input v-model="quota_max1" clearable placeholder="填写最高限额" @keyup.native="reg($event,'quotaMAX1')"></el-input>
                   <div class="unit">{{value_deal}}</div>
                 </div>
               </div>
@@ -451,6 +451,33 @@ export default {
     }
   },
   methods: {
+  	//REG
+  	reg(e,s){
+			e.target.value=e.target.value.replace(/[^\-?\d.]/g,'');
+			e.target.value = e.target.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的
+			e.target.value = e.target.value.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3'); //只能输入1个小数
+			if(s==='num'){
+				this.num=e.target.value;
+			}
+			if(s==='priceCNY'){
+				this.price_cny=e.target.value;
+			}
+			if(s==='quotaMIN2'){
+				this.quota_min2=e.target.value;
+			}
+			if(s==='quotaMAX2'){
+				this.quota_max2=e.target.value;
+			}
+			if(s==='prices'){
+				this.price=e.target.value;
+			}
+			if(s==='quotaMIN1'){
+				this.quota_min1=e.target.value;
+			}
+			if(s==='quotaMAX1'){
+				this.quota_max1=e.target.value;
+			}
+  	},
     open3() {
         this.$prompt('请输入邮箱', '提示', {
           confirmButtonText: '确定',
@@ -469,6 +496,25 @@ export default {
           });       
         });
       },
+    // toDecimal(x1) {
+    //   console.log(x1);
+    //   if (isNaN(x1)) {
+    //     let x = x1.split(" ")[0];
+    //     var f = parseFloat(x);
+    //     let x2 = x.split(".");
+    //     f = x2[0] + "." + x2[1].slice(0, 8);
+    //     return f;
+    //   } else {
+    //     let f = x1.toString();
+    //     if (f.indexOf(".") == -1) {
+    //       return f;
+    //     } else {
+    //       let x2 = f.split(".");
+    //       f = x2[0] + "." + x2[1].slice(0, 8);
+    //       return f;
+    //     }
+    //   }
+    // },
     toDecimal(x1) {
       console.log(x1);
       if (isNaN(x1)) {
@@ -478,14 +524,19 @@ export default {
         f = x2[0] + "." + x2[1].slice(0, 8);
         return f;
       } else {
-        let f = x1.toString();
-        if (f.indexOf(".") == -1) {
-          return f;
-        } else {
-          let x2 = f.split(".");
-          f = x2[0] + "." + x2[1].slice(0, 8);
-          return f;
-        }
+				
+				let str = Math.ceil(x1 * 100000000) / 100000000;
+				return str;
+
+        // let f = x1.toString();
+        // if (f.indexOf(".") == -1) {
+        //   return f;
+        // } else {
+        //   let x2 = f.split(".");
+				// 	// f = x2[0] + "." + x2[1].slice(0, 8);
+				// 	f = x2[0] + "." + Math.floor(Number(x2[1].slice(0, 9)) / 10 );
+        //   return f;
+        // }
       }
     },
     open(val) {

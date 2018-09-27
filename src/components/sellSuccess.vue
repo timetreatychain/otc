@@ -151,7 +151,7 @@
 					{{statustext}}
 				</div>
 				<!--下单成功等待买家付款-->
-				<div class="state1" v-if="status==='1' && ordertitme != 0">
+				<div class="state1" v-if="status==='1'">
 					<div class="state1_time">支付剩余时间<span>{{ordertitme}}</span>逾期将自动取消</div>
 					<div class="state1_text">请及时支付，若已支付请点击【我已放币】</div>
 					<div class="state1_send" @click="tozf">我已放币</div>
@@ -159,13 +159,13 @@
 					<div class="state1_tell">请勿随意取消订单！任意取消订单着，被交易对象投诉将影响系统信用分数，分数过低着账号会被冻结数天。</div>
 				</div>
 				<!--等待买家确认收款-->
-				<div class="state1" v-if="status==='2' && ordertitme != 0">
+				<div class="state1" v-if="status==='2'">
 					<div class="state1_text">请等待买家核实后向您付款！</div>
 					<el-button type="text" @click="state1cancel">取消交易</el-button>
 					<div class="state1_tell">如果您已支付，请勿点击！</div>
 				</div>
 				<!--确认收钱-->
-				<div class="state1" v-if="status==='3' && ordertitme != 0">
+				<div class="state1" v-if="status==='3'">
 					<div class="state1_text">买家已向您付款，请确认是否已收到？</div>
 					<div class="state1_time">请在<span>{{ordertitme}}</span>内完成确认</div>
 					<div class="state1_send" @click="getq">确认已收到付款</div>
@@ -183,6 +183,7 @@
 				<!--交易完成-->
 				<div class="state1" v-if="status==='4'">
 					<div class="state1_text">本次交易已完成，期待与您再次交易！</div>
+					<div class="state1_tell" @click="wyss"><em>我要申诉</em></div>
 					<div class="state1_send" @click="tosell">继续前往出售</div>
 				</div>
 				<!--取消后-->
@@ -191,7 +192,7 @@
 					<div class="state1_send" @click="tosell">重新前往出售</div>
 				</div>
 				<!-- 已过期 -->
-        <div class="state1" v-if="status !=4 &&  ordertitme ==0">
+        <div class="state1" v-if="status ==5&&  ordertitme ==0">
 					<div class="state1_text">交易超时， 已取消</div>
 					<div class="state1_tell" @click="wyss"><em>我要申诉</em></div>
 				</div>
@@ -201,12 +202,25 @@
 					<div class="state1_send" @click="tosell">重新前往出售</div>
 				</div>-->
 				<!--交易过期-->
-				<!-- <div class="state1" v-if="status==='5'">
-					<div class="state1_text">本次交易已过期，请重新前往出售别的吧！</div>
+				<div class="state1" v-if="status==='5'">
+					<!-- <div class="state1_text">本次交易已过期，请重新前往出售别的吧！</div> -->
 					<div class="state1_send" @click="tosell">重新前往出售</div>
-				</div> -->
+				</div>
 			</div>
 		</div>
+		<el-dialog
+  title="请使用微信扫描二维码添加客服，进行申诉"
+  :visible.sync="centerDialogVisible"
+  width="25%"
+  center
+	:show-close = false
+	>
+  <img class="img4" src="../../static/wyss.png" alt="">
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="centerDialogVisible = false">X</el-button>
+    <!-- <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button> -->
+  </span>
+</el-dialog>
 	</div>
 </template>
 
@@ -214,6 +228,7 @@
 	export default{
 		data(){
 			return{
+				centerDialogVisible: false,
 				orderstatus:['已取消','待支付','等待买家付款','买家已付款','交易完成','已过期'],
 				payType: ["", "BIDT", "BTC", "ETH","CNY"],
 				message_text:'',
@@ -226,7 +241,8 @@
 				message:'',
 				uid:localStorage.otc_uId,
 				ordertitme: null,
-        qdjs: ""
+				qdjs: "",
+				timer0:""
 			}
 		},
 		created(){
@@ -237,9 +253,23 @@
 			//建立socket
 			this.websocketopen()
 			this.gettime();
+			// 轮询获取时间
+			this.getNewTime ();
 		},
+		beforeDestroy () {
+				clearInterval(this.timer0 )
+			},
 		methods:{
+			getNewTime () {
+				// clearInterval(this.timer0);
+				 this.timer0 = setInterval(() => {
+					this.getStatus();
+           this.gettime();
+				} , 15000);
+			},
 			wyss () {
+				this.centerDialogVisible = true;
+      return;
        const h = this.$createElement;
         this.$msgbox({
           // title: '',
@@ -249,7 +279,8 @@
           ]),
           showConfirmButton: false,
           showCancelButton: true,
-          cancelButtonText: 'X',
+					cancelButtonText: 'X',
+					center: true,
         }).then(action => {
           // this.$message({
           //   type: 'info',
@@ -282,6 +313,11 @@
 						 }else {
 							 clearInterval(vm.djs);
 							 vm.ordertitme = 0;
+							 if(vm.status == 1) {
+								 vm.status = "5";
+							 }else if(vm.status == 2 || vm.status == 3) {
+								 vm.status = "4"
+							 }
 						 }
 					}, 100);
         }
@@ -533,13 +569,40 @@
 		}
 	}
 </script>
-
+<style lang="scss">
+  .el-message-box__btns {
+  // text-align: center;
+  // border-radius: 5px;
+}
+.el-message-box {
+  // width: 300px;
+  & /deep/ .el-button--small {
+    // border-radius: 10px;
+  }
+}
+</style>
 <style lang="scss" scoped>
 	.sellSuccess{
 		box-sizing: border-box;
 		padding: 0.64rem 1.5rem 0.64rem 1rem;
 		display: flex;
 		align-items: center;
+		& /deep/ .el-dialog__title {
+			font-size: 0.2rem;
+		}
+		& /deep/ .el-dialog__body {
+			padding: 0;
+		}
+		& /deep/  .el-dialog__header {
+			padding: 0;
+		}
+
+ 		& /deep/ .img4 {
+			width: 30%;
+			position: relative;
+			left:50%;
+			transform: translateX(-50%);
+		}
 		.line{
 			margin-right: 0.2rem;
 			display: flex;

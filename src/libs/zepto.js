@@ -1014,16 +1014,16 @@ window.Zepto = Zepto
   	}
     var context = settings.context, status = 'success';
     if(data.state.code==20001){
-    	mui.alert("系统更新中,请稍后重试!","温馨提示","关闭",function(){},'div');
+    	mui.alert("系统更新中,请稍后重试!","提示","关闭",function(){},'div');
     	settings.error.call(context, data, status, xhr);
     }
     if(data.state.code==20002){
-    	mui.alert(data.state.msg,"温馨提示","关闭",function(){},'div');
+    	mui.alert(data.state.msg,"提示","关闭",function(){},'div');
     	
     	settings.error.call(context, data, status, xhr);
     }
     if (data.state.code==20003) { //未登录
-      	mui.alert("未登录","温馨提示","关闭",function(){},'div');
+      	mui.alert("未登录","提示","关闭",function(){},'div');
         settings.error.call(context, data, status, xhr);
     }
     if(data.data){
@@ -1165,9 +1165,9 @@ window.Zepto = Zepto
 			  	params.async=true,
 			  	params.complete=function(XMLHttpRequest,status){
 			  		if(status=='timeout'){
-			  			mui.alert("访问超时,退出重试!","温馨提示","关闭",function(){},'div');
+			  			mui.alert("访问超时,退出重试!","提示","关闭",function(){},'div');
 			　　　}if(status=='error'){
-							mui.alert("系统更新中，请稍后重试！","温馨提示","关闭",function(){},'div');
+							mui.alert("系统更新中，请稍后重试！","提示","关闭",function(){},'div');
 						}
 			  	}
 			  	ajaxPH(params);  

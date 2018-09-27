@@ -46,7 +46,7 @@ export default {
     return {
       // input3: "",
       code_tel11: true,
-      email11:'',
+      email11: "",
       code_tel10: true,
       email3: "",
       code_tel5: true,
@@ -77,8 +77,19 @@ export default {
       index2info: "",
       psd1: "",
       psd2: "",
-      psd3: ""
+      psd3: "",
+      acounttype: ""
     };
+  },
+  watch: {
+    initinfo(val) {
+      if (val && val.account.indexOf("@") != -1) {
+        this.acounttype = "eamil";
+      } else {
+        console.log("00000");
+        this.acounttype = "qkid";
+      }
+    }
   },
   mounted() {
     console.log(this.initinfo);
@@ -99,6 +110,16 @@ export default {
         success(res) {
           if (res.state.code == 20000) {
             vm.initinfo = res.data;
+            if (vm.initinfo.account.indexOf("@") == -1) {
+              vm.acounttype = "qkid";
+              console.log(vm.acounttype);
+              console.log(vm.initinfo.phoneNum);
+            }
+            console.log(vm.acounttype);
+            if (!vm.initinfo.phoneNum && vm.acounttype == "qkid") {
+              vm.xghm = 2;
+              return;
+            }
             vm.xghm = 1;
             // if(vm.initinfo.phoneNum) {
             //   vm.xghm = 1;
@@ -135,7 +156,7 @@ export default {
       this.index1 = 1;
       this.xghm = 2;
     },
-    checkorgemail11 () {
+    checkorgemail11() {
       let vm = this;
       $.ajax({
         type: "post",
@@ -217,7 +238,6 @@ export default {
       }
     },
 
-
     // 绑定新手机号码
     savephone() {
       let vm = this;
@@ -238,7 +258,7 @@ export default {
             // vm.sub1();
             vm.getinit();
             // vm.getsecond();
-            vm.$emit('hideBox' , false);
+            vm.$emit("hideBox", false);
             location.reload();
           } else if (res.state.code == 20002) {
             mui.alert(res.state.msg);
@@ -250,7 +270,6 @@ export default {
       // }
     },
 
-
     getsecond() {
       let vm = this;
       $.ajax({
@@ -259,7 +278,7 @@ export default {
         async: true,
         dataType: "json",
         data: {
-          token: localStorage.otc_token,
+          token: localStorage.otc_token
           // project: 0,
           // languageType: "zh"
         },
@@ -281,8 +300,6 @@ export default {
       }, 2000);
     },
 
-    
-
     // 获取新手机验证码
     //手机验证码
     getcode() {
@@ -302,19 +319,24 @@ export default {
             account: vm.input1
           },
           success(res) {
-            clearInterval(time1);
-            $("#gettelcode2").html("已发送");
-            var count1 = 60;
-            var time1 = setInterval(() => {
-              if (count1 > 0) {
-                $("#gettelcode2").html(count1 + "S");
-              } else {
-                clearInterval(time1);
-                vm.code_tel1 = true;
-                $("#gettelcode2").html("点击获取");
-              }
-              count1--;
-            }, 1000);
+            if (res.state.code == 20000) {
+              clearInterval(time1);
+              $("#gettelcode2").html("已发送");
+              var count1 = 60;
+              var time1 = setInterval(() => {
+                if (count1 > 0) {
+                  $("#gettelcode2").html(count1 + "S");
+                } else {
+                  clearInterval(time1);
+                  vm.code_tel1 = true;
+                  $("#gettelcode2").html("点击获取");
+                }
+                count1--;
+              }, 1000);
+            }
+          },
+          error () {
+            vm.code_tel1 = true;
           }
         });
       } else {
@@ -322,10 +344,7 @@ export default {
       }
     },
 
-
-
-
-    getemailcode11 () {
+    getemailcode11() {
       let vm = this;
       // if($('#tel').val().length<11){
       // 	mui.alert('您输入的手机号码有误！')
@@ -361,7 +380,7 @@ export default {
         mui.alert("60秒内请勿重复点击！");
       }
     },
-    
+
     //手机验证码
     telcode() {
       let vm = this;
@@ -402,7 +421,7 @@ export default {
       } else {
         mui.alert("60秒内请勿重复点击！");
       }
-    },
+    }
   }
 };
 </script>
@@ -464,7 +483,6 @@ export default {
           margin-bottom: 0.4rem;
         }
         &.inpinfo {
-          
           span {
             cursor: pointer;
             border-radius: 0.1rem;

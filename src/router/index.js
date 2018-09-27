@@ -9,7 +9,6 @@ import Sell from '../components/sell'
 import Advertise from '../components/advertise'
 
 import AboutUs from '../components/about_us'
-// import details from '../components/details'
 
 
 import Sellhim from '../components/sellhim'
@@ -22,6 +21,8 @@ import shopChat from '../components/shopChat'
 import Buyadvertise from '../components/Buyadvertise'
 import Selladvertise from '../components/Selladvertise'
 import announcement from '../components/announcement'
+import Announcement_details from '../components/announcement_details'
+import Details from '../components/details'
 import mall from '../components/mall'
 
 import orderManagement from '../components/orderManage'
@@ -96,12 +97,16 @@ export default new Router({
 	    	path:'/announcement',
 	    	name:'announcement',
 				component:announcement,
-				// redirect:"/details"",
+//				 redirect:"/announcement_details",
 				children: [
-					// {
-					// 	path:"/details/:id",
-					// 	component:details,
-					// }
+					 {
+					 	path:"/announcement_details",
+					 	component:Announcement_details,
+					 },
+					 {
+					 	path:"/details",
+					 	component:Details,
+					 }
 				]
 			},
 			
